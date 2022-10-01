@@ -1,4 +1,6 @@
 from utils import *
+from player import Video
+import cv2
 
 # it's set to 1x to show everything
 # for zoomed view set it to 4
@@ -12,6 +14,8 @@ PEDESTRIAN = scale_image(pygame.image.load("imgs/pedestrian_400.png"), ZOOM/4)
 BIKE = scale_image(pygame.image.load("imgs/bike_400.png"), ZOOM/4)
 EGO = scale_image(pygame.image.load("imgs/ego_400.png"), ZOOM/4)
 BLIND = scale_image(pygame.image.load("imgs/blind_400.png"), ZOOM/4)
+
+
 
 
 WIDTH, HEIGHT = BLUE_BACKGROUND.get_width(), BLUE_BACKGROUND.get_height()

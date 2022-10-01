@@ -66,7 +66,7 @@ class AbstractObject:
             self.img = BIKE
         elif self.objectType == 5:
             self.img = PEDESTRIAN
-        elif self.objectType == 6:
+        elif self.objectType == 7:
             self.img = EGO
 
 
