@@ -20,12 +20,13 @@ class GameInfo:
         return self.finished
 
 class AbstractObject:
-    SCALING_VALUE = 3 * ZOOM
+    X_SCALING_VALUE = 3 * ZOOM
+    Y_SCALING_VALUE = 3 * ZOOM
     def __init__(self, img, id, dx, dy, objectType, vx, vy, ax, ay, prob10bstacle, timestamp):
         self.id = id
         self.img = img
-        self.dx = dx / 128 * self.SCALING_VALUE
-        self.dy = dy / 128 * self.SCALING_VALUE 
+        self.dx = dx / 128 * self.X_SCALING_VALUE
+        self.dy = dy / 128 * self.Y_SCALING_VALUE 
         self.objectType = objectType
         self.vx = vx
         self.vy = vy
@@ -33,62 +34,42 @@ class AbstractObject:
         self.ay= ay
         self.prob10bstacle = prob10bstacle
         self.timestamp = timestamp
-
+        self.setImage()
     def __key(self):
         return (self.dx, self.dy, self.objectType, self.vx, self.vy, self.ax, self.ay, self.prob10bstacle)
     def __hash__(self):
         return hash(self.__key())
     def __eq__(self, other):
-        x1, y1 = self.dx / self.SCALING_VALUE, self.dy / self.SCALING_VALUE
-        x2, y2 = other.dx / self.SCALING_VALUE, other.dy / self.SCALING_VALUE
+        x1, y1 = self.getXYfromOriginInMeters()
+        x2, y2 = other.getXYfromOriginInMeters()
         delta_x, delta_y = abs(x2 - x1), abs(y2 - y1)
-        print((x1, y1), (x2, y2))
-        return delta_x < 15 and delta_y < 15
-        
-    # def rotate(self, left=False, right=False):
-    #     if left:
-    #         self.angle += self.rotation_vel
-    #     elif right:
-    #         self.angle -= self.rotation_vel
+        return delta_x <= 5.5 and delta_y <= 3
 
-    def draw(self, win):
-        # blit_rotate_center(win, self.img, (self.x, self.y), self.angle)
-        currentX, currentY = convertToPygame(win, self.dx, self.dy)
-        currentX, currentY = adjustPositionToObject(self.img, currentX, currentY)
-        # currentX, currentY = adjustPositionToObject(self.img, self.dx, self.dy)
-        # currentX, currentY = convertToPygame(win, currentX, currentY)
+    def draw(self, win, isBlind):
+        if (self.dx != 0 and self.dy != 0) and isBlind:
+            print("blind spot")
+            self.img = BLIND
+        else: 
+            self.setImage()
+        oldX, oldY = convertToPygame(win, self.dx, self.dy)
+        currentX, currentY = adjustPositionToObject(self.img, oldX, oldY)
         win.blit(self.img, (currentX, currentY))
-
-    # def move_forward(self):
-    #     self.vel = min(self.vel + self.acceleration, self.max_vel)
-    #     self.move()
-
-    # def move_backward(self):
-    #     self.vel = max(self.vel - self.acceleration, -self.max_vel/2)
-    #     self.move()
-
-    # def move(self):
-    #     radians = math.radians(self.angle)
-    #     vertical = math.cos(radians) * self.vel
-    #     horizontal = math.sin(radians) * self.vel
-
-    #     self.y -= vertical
-    #     self.x -= horizontal
+        return oldX, oldY
     
-    # def setxy(x, y):
-    #     self.x += x
-    #     self.y += x
+    def getXYfromOriginInMeters(self):
+        return ((self.dx / self.X_SCALING_VALUE), (self.dy / self.Y_SCALING_VALUE))
+    
+    def setImage(self):
+        if self.objectType == 1 or self.objectType == 2 or self.objectType == 6: 
+            self.img = CAR
+        elif self.objectType == 3 or self.objectType == 4:
+            self.img = BIKE
+        elif self.objectType == 5:
+            self.img = PEDESTRIAN
+        elif self.objectType == 6:
+            self.img = EGO
 
-    # def collide(self, mask, x=0, y=0):
-    #     car_mask = pygame.mask.from_surface(self.img)
-    #     offset = (int(self.x - x), int(self.y - y))
-    #     poi = mask.overlap(car_mask, offset)
-    #     return poi
 
-    # def reset(self):
-    #     self.x, self.y = self.START_POS
-    #     self.angle = 0
-    #     self.vel = 0
 
 # class Ego(AbstractObject):
 #     img = CAR

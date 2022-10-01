@@ -58,6 +58,9 @@ def blit_rotate_center(win, image, top_left, angle):
         center=image.get_rect(topleft=top_left).center)
     win.blit(rotated_image, new_rect.topleft)
 
+def printText(win, text, font, color = (200,200,200), pos = (100,100)):
+    render = font.render(text, 1, color)
+    win.blit(render, pos)
 
 def blit_text_center(win, font, text):
     render = font.render(text, 1, (200, 200, 200))
@@ -69,11 +72,19 @@ def blit_center(win, render):
 def convertToPygame(win, x, y): 
     return (win.get_width() / 2 - y, win.get_height() / 2 - x)
 
+def convertMetersToPixels(m, zoom):
+    return m * 3 * zoom
+
 def adjustPositionToObject(obj, x, y): 
     return ((x - obj.get_width() / 2), (y - obj.get_height() / 2))
 
-def metersToPixels(m):
-    return m * 2
+def convertMeterPointToPygame(win, x, y, zoom):
+    # 1 m = 1 * 3 * ZOOM
+    pX = convertMetersToPixels(x,zoom)
+    pY = convertMetersToPixels(y,zoom)
+
+    return convertToPygame(win, pX, pY)
+
 # ! Camera: 
     # * for each time stamp and for each object ID: 
         # ? object timestamp

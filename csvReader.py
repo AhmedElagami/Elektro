@@ -1,6 +1,7 @@
 import csv
 from constants import *
 from models import AbstractObject
+from utils import *
 
 # {
 #     "timestamp": {
@@ -91,13 +92,7 @@ def addInfoFromRow(sensor, row, noOfObjects, dataset):
         else:
             objectType = int(row[headerName + 'objType'])
         
-        img = scale_image(UNKNOWN, ZOOM/4)
-        if objectType == 1 or objectType == 2 or objectType == 6: 
-            img = scale_image(CAR, ZOOM/4)
-        elif objectType == 3 or objectType == 4:
-            img = scale_image(BIKE, ZOOM/4)
-        elif objectType == 5:
-            img = scale_image(PEDESTRIAN, ZOOM/4)
+        img = UNKNOWN
         currentObject = AbstractObject(img, i, dx, dy, objectType, vx, vy, ax, ay, prob1Obstacle, timestamp)
         dataset[timestamp].append(currentObject)
         i += 1
