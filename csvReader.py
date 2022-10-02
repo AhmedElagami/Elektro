@@ -3,43 +3,8 @@ from constants import *
 from models import AbstractObject
 from utils import *
 
-# {
-#     "timestamp": {
-#         "id":0,
-#         "dx": 10,
-#         "dy": 10,
-#         "objectType": "car", 
-#         "vx": 10, 
-#         "vy": 10,
-#     },
-# }
-
-# {
-#   "timestamp": [
-        # {
-    #         "id":0,
-    #         "timestamp": "dsfsd"
-    #         "ax": 10,
-    #         "ay": 10,
-    #         "dx": 10,
-    #         "dy": 10,
-    #         "dz": 10,
-    #         "prob10bstacle": 10,
-    #         "vx": 10, 
-    #         "vy": 10,
-    #     },
-   #]
-# }
-
-# {
-#     "timestamp": {
-        # "posXCam": ""
-        # "posYCam": ""
-        # "posZCam": ""
-#     },
-# }
-
-
+# transofrms the data from the csv into much clearer data
+# according to each sensor and radar
 camera_objects = {}
 corner0_objects = {}
 corner1_objects = {}
@@ -97,7 +62,8 @@ def addInfoFromRow(sensor, row, noOfObjects, dataset):
         dataset[timestamp].append(currentObject)
         i += 1
 
-with open('data.csv') as csv_file:
+# Group_349 is for sensor data
+with open('data/Group_349.csv') as csv_file:
     csv_reader = csv.DictReader(csv_file, delimiter=',')
     line_count = 0
     for row in csv_reader:
@@ -107,4 +73,41 @@ with open('data.csv') as csv_file:
         addInfoFromRow("corner2", row, 10, corner2_objects)
         addInfoFromRow("corner3", row, 10, corner3_objects)
 
-print("Done taking data")
+# preliminary visualisation
+# Abstract Object is used instead of python dictionaries in the timestamp arrays
+# {
+#     "timestamp": [ {
+#          "id":-1,
+#          "dx": 9,
+#          "dy": 9,
+#          "objectType": "car", 
+#          "vx": 9, 
+#          "vy": 9,
+#          },
+#     ]
+# }
+
+# {
+#   "timestamp": [
+        # {
+    #         "id":-1,
+    #         "timestamp": "dsfsd"
+    #         "ax": 9,
+    #         "ay": 9,
+    #         "dx": 9,
+    #         "dy": 9,
+    #         "dz": 9,
+    #         "prob9bstacle": 10,
+    #         "vx": 9, 
+    #         "vy": 9,
+    #     },
+   #]
+# }
+
+# {
+#     "timestamp": {
+        # "posXCam": ""
+        # "posYCam": ""
+        # "posZCam": ""
+#     },
+# }
